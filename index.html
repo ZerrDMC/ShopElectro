@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="es" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ElectroTech - Tienda de Electrónica & Tecnología</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Poppins', 'sans-serif'],
+                    },
+                    colors: {
+                        electrodark: {
+                            900: '#0f172a',
+                            800: '#1e293b',
+                            700: '#334155',
+                        },
+                        electroneon: {
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            purple: '#8b5cf6',
+                            cyan: '#06b6d4'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="h-full bg-slate-950 text-slate-100 font-sans flex flex-col justify-between selection:bg-electroneon-500 selection:text-white">
+
+    <!-- HEADER / NAVIGATION -->
+    <header class="sticky top-0 z-40 bg-slate-900/90 backdrop-blur-md shadow-lg border-b border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <!-- Logo -->
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="filterCategory('todos')">
+                <div class="w-12 h-12 bg-gradient-to-tr from-electroneon-600 to-electroneon-purple rounded-2xl flex items-center justify-center text-white shadow-lg shadow-blue-500/20 transform hover:scale-105 transition duration-300">
+                    <i class="fa-solid fa-bolt text-2xl"></i>
+                </div>
+                <div>
+                    <span class="text-xl font-extrabold bg-gradient-to-r from-blue-400 via-cyan-400 to-purple-400 bg-clip-text text-transparent">ElectroTech</span>
+                    <span class="block text-xs font-medium text-slate-400">Gaming & Hardware Store</span>
+                </div>
+            </div>
+
+            <!-- Search Bar (Desktop) -->
+            <div class="hidden md:flex items-center flex-1 max-w-md mx-8">
+                <div class="relative w-full">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none text-slate-400">
+                        <i class="fa-solid fa-search"></i>
+                    </span>
+                    <input type="text" id="searchInput" oninput="handleSearch(this.value)" placeholder="Buscar auriculares, mouse, teclados, monitores..." class="w-full pl-11 pr-4 py-2.5 bg-slate-800/80 border border-slate-700 rounded-full text-sm text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-electroneon-500/50 focus:bg-slate-800 transition duration-200">
+                </div>
+            </div>
+
+            <!-- Actions / Cart Button -->
+            <div class="flex items-center space-x-4">
+                <button onclick="toggleCart()" class="relative bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 px-4 py-2.5 rounded-full font-semibold flex items-center space-x-2 transition duration-200 shadow-sm">
+                    <i class="fa-solid fa-cart-shopping text-lg text-blue-400"></i>
+                    <span class="hidden sm:inline text-sm">Carrito</span>
+                    <span id="cartBadge" class="absolute -top-1.5 -right-1.5 bg-blue-600 text-white text-xs w-6 h-6 rounded-full flex items-center justify-center font-bold shadow-md transform scale-0 transition-transform duration-300">0</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Search Bar (Mobile) -->
+        <div class="md:hidden px-4 pb-3">
+            <div class="relative w-full">
+                <span class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none text-slate-400">
+                    <i class="fa-solid fa-search"></i>
+                </span>
+                <input type="text" id="searchInputMobile" oninput="handleSearch(this.value)" placeholder="Buscar productos..." class="w-full pl-11 pr-4 py-2 bg-slate-800 border border-slate-700 rounded-full text-sm text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-electroneon-500">
+            </div>
+        </div>
+    </header>
+
+    <!-- HERO BANNER -->
+    <section class="relative bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white overflow-hidden py-12 md:py-20 border-b border-slate-800">
+        <div class="absolute inset-0 opacity-15 bg-[radial-gradient(#3b82f6_1px,transparent_1px)] [background-size:20px_20px]"></div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 flex flex-col md:flex-row items-center justify-between">
+            <div class="md:w-1/2 text-center md:text-left mb-8 md:mb-0">
+                <span class="inline-block bg-blue-500/10 text-blue-400 border border-blue-500/20 px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider mb-4 backdrop-blur-md">⚡ Tecnología de Última Generación</span>
+                <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight mb-4 leading-tight">Equipa tu setup con el mejor rendimiento</h1>
+                <p class="text-lg text-slate-300 mb-6 font-light">Auriculares inalámbricos de alta fidelidad, periféricos gaming profesionales y pantallas ultra fluidas con envíos a todo el país.</p>
+                <div class="flex flex-wrap justify-center md:justify-start gap-4">
+                    <a href="#catalogo" class="bg-blue-600 hover:bg-blue-500 text-white px-6 py-3 rounded-full font-bold shadow-lg shadow-blue-500/25 transition duration-300 transform hover:-translate-y-0.5">Ver Catálogo</a>
+                    <button onclick="filterCategory('auriculares')" class="bg-slate-800 hover:bg-slate-700 border border-slate-700 px-6 py-3 rounded-full font-semibold transition duration-300">Explorar Auriculares</button>
+                </div>
+            </div>
+            <div class="md:w-1/2 flex justify-center">
+                <div class="relative w-72 h-72 sm:w-80 sm:h-80 bg-slate-800/50 backdrop-blur-md rounded-3xl p-6 border border-slate-700/80 shadow-2xl flex items-center justify-center transform hover:scale-105 transition duration-500 group">
+                    <i class="fa-solid fa-headphones text-8xl text-blue-400 drop-shadow-[0_0_15px_rgba(59,130,246,0.5)]"></i>
+                    <div class="absolute -bottom-4 -right-4 bg-slate-900 border border-slate-700 text-slate-100 p-4 rounded-2xl shadow-xl flex items-center space-x-3">
+                        <div class="w-10 h-10 bg-blue-500/20 rounded-full flex items-center justify-center text-blue-400 font-bold">
+                            <i class="fa-solid fa-truck-fast"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs font-bold text-slate-400">Envío Rápido</p>
+                            <p class="text-sm font-extrabold text-white">¡Gratis desde $40.000!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- MAIN CONTENT & CATALOG -->
+    <main id="catalogo" class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full">
+        
+        <!-- Category Filter Buttons -->
+        <div class="flex items-center justify-start overflow-x-auto pb-4 mb-8 space-x-2 no-scrollbar">
+            <button onclick="filterCategory('todos')" id="cat-todos" class="category-btn whitespace-nowrap px-5 py-2.5 rounded-full text-sm font-semibold transition duration-200 bg-blue-600 text-white shadow-lg shadow-blue-600/25">Todos</button>
+            <button onclick="filterCategory('auriculares')" id="cat-auriculares" class="category-btn whitespace-nowrap px-5 py-2.5 rounded-full text-sm font-semibold transition duration-200 bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800">Auriculares</button>
+            <button onclick="filterCategory('mouse')" id="cat-mouse" class="category-btn whitespace-nowrap px-5 py-2.5 rounded-full text-sm font-semibold transition duration-200 bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800">Mouse</button>
+            <button onclick="filterCategory('teclados')" id="cat-teclados" class="category-btn whitespace-nowrap px-5 py-2.5 rounded-full text-sm font-semibold transition duration-200 bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800">Teclados</button>
+            <button onclick="filterCategory('monitores')" id="cat-monitores" class="category-btn whitespace-nowrap px-5 py-2.5 rounded-full text-sm font-semibold transition duration-200 bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800">Monitores</button>
+            <button onclick="filterCategory('audio')" id="cat-audio" class="category-btn whitespace-nowrap px-5 py-2.5 rounded-full text-sm font-semibold transition duration-200 bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800">Audio</button>
+            <button onclick="filterCategory('accesorios')" id="cat-accesorios" class="category-btn whitespace-nowrap px-5 py-2.5 rounded-full text-sm font-semibold transition duration-200 bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800">Accesorios</button>
+        </div>
+
+        <!-- Section Title & Counter -->
+        <div class="flex justify-between items-center mb-6">
+            <h2 id="sectionTitle" class="text-2xl font-bold text-white">Catálogo General</h2>
+            <span id="productCount" class="text-sm font-medium text-slate-400">Mostrando productos</span>
+        </div>
+
+        <!-- Product Grid -->
+        <div id="productGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <!-- Dynamically injected products -->
+        </div>
+
+        <!-- Empty State Search -->
+        <div id="noResults" class="hidden text-center py-16">
+            <div class="w-20 h-20 bg-slate-900 text-blue-400 border border-slate-800 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl">
+                <i class="fa-solid fa-microchip"></i>
+            </div>
+            <h3 class="text-xl font-bold text-white mb-2">No encontramos equipos con ese criterio</h3>
+            <p class="text-slate-400 text-sm max-w-sm mx-auto mb-6">Prueba buscando con otra palabra clave o explora otra categoría tecnológica.</p>
+            <button onclick="resetFilters()" class="bg-blue-600 text-white px-6 py-2.5 rounded-full font-semibold shadow-md hover:bg-blue-500 transition">Ver todos los productos</button>
+        </div>
+    </main>
+
+    <!-- SHOPPING CART SLIDE-OVER DRAWER -->
+    <div id="cartOverlay" class="fixed inset-0 bg-slate-950/70 backdrop-blur-sm z-50 hidden transition-opacity opacity-0" onclick="toggleCart()"></div>
+    
+    <div id="cartDrawer" class="fixed inset-y-0 right-0 max-w-md w-full bg-slate-900 border-l border-slate-800 shadow-2xl z-50 transform translate-x-full transition-transform duration-300 flex flex-col">
+        <!-- Cart Header -->
+        <div class="p-5 border-b border-slate-800 flex items-center justify-between bg-slate-950/50">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 bg-blue-500/20 text-blue-400 rounded-xl flex items-center justify-center font-bold">
+                    <i class="fa-solid fa-cart-shopping"></i>
+                </div>
+                <div>
+                    <h3 class="font-bold text-white">Tu Carrito Tech</h3>
+                    <p id="cartItemCountSubtitle" class="text-xs text-slate-400">0 ítems seleccionados</p>
+                </div>
+            </div>
+            <button onclick="toggleCart()" class="w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 flex items-center justify-center transition">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+
+        <!-- Cart Items List -->
+        <div id="cartItemsList" class="flex-1 overflow-y-auto p-5 divide-y divide-slate-800">
+            <!-- Dynamically injected cart items -->
+        </div>
+
+        <!-- Cart Footer / Checkout -->
+        <div id="cartFooter" class="p-5 border-t border-slate-800 bg-slate-950/50 hidden">
+            <div class="space-y-2 mb-4">
+                <div class="flex justify-between text-sm text-slate-400">
+                    <span>Subtotal</span>
+                    <span id="cartSubtotal" class="text-slate-200">$0</span>
+                </div>
+                <div class="flex justify-between text-sm text-slate-400">
+                    <span>Envío</span>
+                    <span class="text-emerald-400 font-semibold">Gratis</span>
+                </div>
+                <div class="flex justify-between text-base font-extrabold text-white pt-2 border-t border-slate-800">
+                    <span>Total a Pagar</span>
+                    <span id="cartTotal" class="text-blue-400 text-lg">$0</span>
+                </div>
+            </div>
+            
+            <div class="space-y-2">
+                <button onclick="checkoutMercadoPago()" class="w-full bg-[#009EE3] hover:bg-[#0082be] text-white py-3.5 px-4 rounded-xl font-bold flex items-center justify-center space-x-2 shadow-lg shadow-sky-500/25 transition transform active:scale-98">
+                    <span class="bg-white text-[#009EE3] px-2 py-0.5 rounded text-xs font-black uppercase">MP</span>
+                    <span>Pagar con Mercado Pago</span>
+                    <i class="fa-solid fa-arrow-right text-xs"></i>
+                </button>
+                <button onclick="clearCart()" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-300 py-2.5 px-4 rounded-xl font-semibold border border-slate-700 text-sm transition">
+                    Vaciar Carrito
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- NOTIFICATION TOAST -->
+    <div id="toast" class="fixed bottom-5 right-5 z-50 transform translate-y-20 opacity-0 transition-all duration-300 bg-slate-900 text-white px-5 py-3 rounded-2xl shadow-2xl flex items-center space-x-3 border border-slate-700">
+        <div id="toastIcon" class="text-emerald-400">
+            <i class="fa-solid fa-circle-check text-xl"></i>
+        </div>
+        <div>
+            <p id="toastTitle" class="text-sm font-bold">¡Producto agregado!</p>
+            <p id="toastMessage" class="text-xs text-slate-400">Se añadió al carrito correctamente.</p>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="bg-slate-900 text-slate-400 py-12 border-t border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+            <div>
+                <div class="flex items-center space-x-3 mb-4">
+                    <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white">
+                        <i class="fa-solid fa-bolt text-xl"></i>
+                    </div>
+                    <span class="text-lg font-bold text-white">ElectroTech</span>
+                </div>
+                <p class="text-sm text-slate-400 leading-relaxed">Tu tienda especializada en hardware, periféricos gaming y tecnología avanzada.</p>
+            </div>
+            <div>
+                <h4 class="text-white font-bold mb-4 text-sm uppercase tracking-wider">Categorías</h4>
+                <ul class="space-y-2 text-sm">
+                    <li><button onclick="filterCategory('auriculares')" class="hover:text-blue-400 transition">Auriculares Inalámbricos</button></li>
+                    <li><button onclick="filterCategory('mouse')" class="hover:text-blue-400 transition">Mouse Gamer & Oficina</button></li>
+                    <li><button onclick="filterCategory('teclados')" class="hover:text-blue-400 transition">Teclados Mecánicos</button></li>
+                    <li><button onclick="filterCategory('monitores')" class="hover:text-blue-400 transition">Monitores Alta Definición</button></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-white font-bold mb-4 text-sm uppercase tracking-wider">Ayuda & Soporte</h4>
+                <ul class="space-y-2 text-sm">
+                    <li><a href="#" class="hover:text-blue-400 transition">Estado de mis pedidos</a></li>
+                    <li><a href="#" class="hover:text-blue-400 transition">Garantía oficial</a></li>
+                    <li><a href="#" class="hover:text-blue-400 transition">Preguntas frecuentes</a></li>
+                    <li><a href="#" class="hover:text-blue-400 transition">Soporte técnico</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-white font-bold mb-4 text-sm uppercase tracking-wider">Métodos de Pago</h4>
+                <p class="text-sm mb-4">Aceptamos todas las tarjetas de crédito, débito y Mercado Pago de forma segura.</p>
+                <div class="flex space-x-3 text-2xl text-slate-300">
+                    <i class="fa-brands fa-cc-visa" title="Visa"></i>
+                    <i class="fa-brands fa-cc-mastercard" title="Mastercard"></i>
+                    <i class="fa-brands fa-cc-amex" title="Amex"></i>
+                    <i class="fa-solid fa-wallet" title="Mercado Pago"></i>
+                </div>
+            </div>
+        </div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 border-t border-slate-800 text-center text-xs text-slate-500">
+            &copy; 2026 ElectroTech. Todos los derechos reservados. Diseñado para entusiastas de la tecnología.
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT APP LOGIC -->
+    <script>
+        // Product Database
+        const products = [
+            {
+                id: 1,
+                name: "Auriculares Gamer Inalámbricos RGB Pro",
+                category: "auriculares",
+                price: 68990,
+                rating: 4.9,
+                reviews: 142,
+                image: "https://placehold.co/400x400/1e293b/3b82f6?text=Auriculares+RGB",
+                badge: "Más Vendido",
+                description: "Sonido envolvente 7.1 virtual, latencia ultra baja y batería de hasta 40 horas."
+            },
+            {
+                id: 2,
+                name: "Mouse Inalámbrico Ergonómico 16000 DPI",
+                category: "mouse",
+                price: 29500,
+                rating: 4.8,
+                reviews: 98,
+                image: "https://placehold.co/400x400/1e293b/06b6d4?text=Mouse+Gamer",
+                badge: "Oferta",
+                description: "Sensor óptico de alta precisión, iluminación RGB personalizable y diseño ultraliviano."
+            },
+            {
+                id: 3,
+                name: "Teclado Mecánico 60% Switches Red",
+                category: "teclados",
+                price: 48000,
+                rating: 4.7,
+                reviews: 76,
+                image: "https://placehold.co/400x400/1e293b/8b5cf6?text=Teclado+Mecanico",
+                badge: "Popular",
+                description: "Formato compacto, teclas PBT de doble inyección y retroiluminación LED blanca."
+            },
+            {
+                id: 4,
+                name: "Monitor Gamer 27\" IPS 180Hz 1ms",
+                category: "monitores",
+                price: 289990,
+                rating: 5.0,
+                reviews: 54,
+                image: "https://placehold.co/400x400/1e293b/3b82f6?text=Monitor+27+180Hz",
+                badge: "Premium",
+                description: "Resolución Full HD, compatibilidad con FreeSync y diseño sin bordes en 3 lados."
+            },
+            {
+                id: 5,
+                name: "Parlante Bluetooth 5.3 Resistente Agua IP67",
+                category: "audio",
+                price: 34500,
+                rating: 4.6,
+                reviews: 62,
+                image: "https://placehold.co/400x400/1e293b/06b6d4?text=Parlante+Bluetooth",
+                badge: "Nuevo",
+                description: "Sonido estéreo potente con graves profundos y hasta 12 horas de reproducción continua."
+            },
+            {
+                id: 6,
+                name: "Hub USB-C 7 en 1 con HDMI 4K",
+                category: "accesorios",
+                price: 21900,
+                rating: 4.8,
+                reviews: 89,
+                image: "https://placehold.co/400x400/1e293b/8b5cf6?text=Hub+USB-C",
+                badge: "",
+                description: "Adaptador multipuerto con transferencia de datos veloz y carga Power Delivery de 100W."
+            },
+            {
+                id: 7,
+                name: "Auriculares In-Ear TWS Cancelación de Ruido",
+                category: "auriculares",
+                price: 39900,
+                rating: 4.7,
+                reviews: 115,
+                image: "https://placehold.co/400x400/1e293b/3b82f6?text=Auriculares+TWS",
+                badge: "Más Vendido",
+                description: "Cancelación activa de ruido (ANC), modo transparencia y estuche de carga rápida."
+            },
+            {
+                id: 8,
+                name: "Mousepad Gaming XXL Impermeable",
+                category: "accesorios",
+                price: 12500,
+                rating: 4.9,
+                reviews: 130,
+                image: "https://placehold.co/400x400/1e293b/06b6d4?text=Mousepad+XXL",
+                badge: "",
+                description: "Superficie de tela microtexturizada optimizada para control y base de goma antideslizante."
+            },
+            {
+                id: 9,
+                name: "Teclado Inalámbrico Multimedia Slim",
+                category: "teclados",
+                price: 24900,
+                rating: 4.5,
+                reviews: 41,
+                image: "https://placehold.co/400x400/1e293b/8b5cf6?text=Teclado+Slim",
+                badge: "",
+                description: "Diseño ultra delgado y silencioso con conectividad dual Bluetooth y receptor USB 2.4G."
+            },
+            {
+                id: 10,
+                name: "Micrófono Condensador USB para Streaming",
+                category: "audio",
+                price: 52000,
+                rating: 4.9,
+                reviews: 83,
+                image: "https://placehold.co/400x400/1e293b/3b82f6?text=Microfono+USB",
+                badge: "Destacado",
+                description: "Patrón polar cardioide, control de ganancia integrado y filtro antipop incluido."
+            }
+        ];
+
+        // State variables
+        let cart = [];
+        let currentCategory = 'todos';
+        let searchQuery = '';
+
+        // DOM Loaded Init
+        document.addEventListener('DOMContentLoaded', () => {
+            renderProducts(products);
+            updateCartUI();
+        });
+
+        // Render Product Grid
+        function renderProducts(items) {
+            const grid = document.getElementById('productGrid');
+            const noResults = document.getElementById('noResults');
+            const productCount = document.getElementById('productCount');
+            
+            grid.innerHTML = '';
+            productCount.textContent = `Mostrando ${items.length} productos`;
+
+            if (items.length === 0) {
+                noResults.classList.remove('hidden');
+                return;
+            } else {
+                noResults.classList.add('hidden');
+            }
+
+            items.forEach(product => {
+                const card = document.createElement('div');
+                card.className = "bg-slate-900 rounded-2xl shadow-md hover:shadow-blue-500/10 border border-slate-800 overflow-hidden flex flex-col justify-between transition-all duration-300 transform hover:-translate-y-1 group";
+                
+                let badgeHTML = '';
+                if (product.badge) {
+                    let badgeColor = 'bg-blue-600 text-white';
+                    if(product.badge === 'Oferta') badgeColor = 'bg-rose-600 text-white';
+                    if(product.badge === 'Nuevo') badgeColor = 'bg-cyan-600 text-white';
+                    if(product.badge === 'Premium') badgeColor = 'bg-purple-600 text-white';
+                    badgeHTML = `<span class="absolute top-3 left-3 ${badgeColor} text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider shadow-sm">${product.badge}</span>`;
+                }
+
+                card.innerHTML = `
+                    <div class="relative bg-slate-950 overflow-hidden h-48 flex items-center justify-center p-4">
+                        ${badgeHTML}
+                        <img src="${product.image}" alt="${product.name}" onerror="this.src='https://placehold.co/400x400/0f172a/3b82f6?text=ElectroTech'" class="w-full h-full object-cover rounded-xl group-hover:scale-105 transition duration-500 opacity-90">
+                    </div>
+                    <div class="p-5 flex flex-col flex-grow justify-between">
+                        <div>
+                            <div class="flex items-center space-x-1 text-amber-400 text-xs mb-1">
+                                <i class="fa-solid fa-star"></i>
+                                <span class="font-bold text-slate-200">${product.rating}</span>
+                                <span class="text-slate-500">(${product.reviews})</span>
+                            </div>
+                            <h3 class="font-bold text-white text-base mb-1 line-clamp-1 group-hover:text-blue-400 transition">${product.name}</h3>
+                            <p class="text-xs text-slate-400 mb-4 line-clamp-2">${product.description}</p>
+                        </div>
+                        <div class="flex items-center justify-between pt-3 border-t border-slate-800 mt-auto">
+                            <div>
+                                <span class="text-xs text-slate-500 block">Precio</span>
+                                <span class="text-lg font-extrabold text-white">$${product.price.toLocaleString('es-AR')}</span>
+                            </div>
+                            <button onclick="addToCart(${product.id})" class="bg-blue-600 hover:bg-blue-500 text-white w-10 h-10 rounded-xl flex items-center justify-center shadow-md shadow-blue-600/25 transition duration-200 transform active:scale-95" title="Agregar al carrito">
+                                <i class="fa-solid fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // Filter by Category
+        function filterCategory(category) {
+            currentCategory = category;
+            
+            // Update buttons active style
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.className = "category-btn whitespace-nowrap px-5 py-2.5 rounded-full text-sm font-semibold transition duration-200 bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800";
+            });
+            
+            const activeBtn = document.getElementById(`cat-${category}`);
+            if(activeBtn) {
+                activeBtn.className = "category-btn whitespace-nowrap px-5 py-2.5 rounded-full text-sm font-semibold transition duration-200 bg-blue-600 text-white shadow-lg shadow-blue-600/25";
+            }
+
+            // Update section title
+            const titles = {
+                'todos': 'Catálogo General',
+                'auriculares': 'Auriculares Inalámbricos',
+                'mouse': 'Mouse Gamer & Oficina',
+                'teclados': 'Teclados Mecánicos',
+                'monitores': 'Monitores Alta Definición',
+                'audio': 'Equipos de Audio',
+                'accesorios': 'Accesorios & Conectividad'
+            };
+            document.getElementById('sectionTitle').textContent = titles[category] || 'Resultados';
+
+            applyFilters();
+        }
+
+        // Search Handler
+        function handleSearch(query) {
+            searchQuery = query.toLowerCase().trim();
+            // Sync mobile/desktop input fields
+            document.getElementById('searchInput').value = query;
+            document.getElementById('searchInputMobile').value = query;
+            applyFilters();
+        }
+
+        // Combine Category and Search filters
+        function applyFilters() {
+            let filtered = products;
+
+            if (currentCategory !== 'todos') {
+                filtered = filtered.filter(p => p.category === currentCategory);
+            }
+
+            if (searchQuery !== '') {
+                filtered = filtered.filter(p => 
+                    p.name.toLowerCase().includes(searchQuery) || 
+                    p.description.toLowerCase().includes(searchQuery)
+                );
+            }
+
+            renderProducts(filtered);
+        }
+
+        function resetFilters() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('searchInputMobile').value = '';
+            searchQuery = '';
+            filterCategory('todos');
+        }
+
+        // Cart Actions
+        function addToCart(productId) {
+            const product = products.find(p => p.id === productId);
+            if (!product) return;
+
+            const existingItem = cart.find(item => item.id === productId);
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({ ...product, quantity: 1 });
+            }
+
+            updateCartUI();
+            showToast("¡Producto agregado!", `${product.name} se añadió a tu carrito.`);
+        }
+
+        function changeQuantity(productId, delta) {
+            const item = cart.find(i => i.id === productId);
+            if (!item) return;
+
+            item.quantity += delta;
+            if (item.quantity <= 0) {
+                cart = cart.filter(i => i.id !== productId);
+            }
+            updateCartUI();
+        }
+
+        function removeFromCart(productId) {
+            cart = cart.filter(i => i.id !== productId);
+            updateCartUI();
+        }
+
+        function clearCart() {
+            cart = [];
+            updateCartUI();
+            showToast("Carrito vaciado", "Se han eliminado todos los productos.", "text-rose-400");
+        }
+
+        // Update Cart Drawer & Badges
+        function updateCartUI() {
+            const badge = document.getElementById('cartBadge');
+            const subtitle = document.getElementById('cartItemCountSubtitle');
+            const list = document.getElementById('cartItemsList');
+            const footer = document.getElementById('cartFooter');
+            
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+
+            // Badge count
+            if (totalItems > 0) {
+                badge.textContent = totalItems;
+                badge.classList.remove('scale-0');
+                badge.classList.add('scale-100');
+            } else {
+                badge.classList.remove('scale-100');
+                badge.classList.add('scale-0');
+            }
+
+            subtitle.textContent = `${totalItems} ${totalItems === 1 ? 'ítem seleccionado' : 'ítems seleccionados'}`;
+
+            // Render Cart Items
+            list.innerHTML = '';
+            if (cart.length === 0) {
+                list.innerHTML = `
+                    <div class="text-center py-16">
+                        <div class="w-16 h-16 bg-slate-800 text-slate-500 rounded-full flex items-center justify-center mx-auto mb-3 text-2xl">
+                            <i class="fa-solid fa-cart-shopping"></i>
+                        </div>
+                        <p class="font-bold text-slate-300 mb-1">Tu carrito está vacío</p>
+                        <p class="text-xs text-slate-500">¡Agrega equipos tecnológicos a tu setup!</p>
+                    </div>
+                `;
+                footer.classList.add('hidden');
+            } else {
+                footer.classList.remove('hidden');
+                cart.forEach(item => {
+                    const row = document.createElement('div');
+                    row.className = "py-4 flex items-center justify-between space-x-3";
+                    row.innerHTML = `
+                        <img src="${item.image}" alt="${item.name}" class="w-16 h-16 object-cover rounded-xl bg-slate-950 flex-shrink-0 border border-slate-800">
+                        <div class="flex-1 min-w-0">
+                            <h4 class="text-sm font-bold text-slate-100 truncate">${item.name}</h4>
+                            <p class="text-xs font-semibold text-blue-400 mb-2">$${(item.price * item.quantity).toLocaleString('es-AR')}</p>
+                            <div class="flex items-center space-x-2">
+                                <button onclick="changeQuantity(${item.id}, -1)" class="w-6 h-6 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 flex items-center justify-center text-xs font-bold transition">-</button>
+                                <span class="text-xs font-bold text-slate-200 w-5 text-center">${item.quantity}</span>
+                                <button onclick="changeQuantity(${item.id}, 1)" class="w-6 h-6 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 flex items-center justify-center text-xs font-bold transition">+</button>
+                            </div>
+                        </div>
+                        <button onclick="removeFromCart(${item.id})" class="text-slate-500 hover:text-rose-400 p-2 transition">
+                            <i class="fa-solid fa-trash-can text-sm"></i>
+                        </button>
+                    `;
+                    list.appendChild(row);
+                });
+            }
+
+            document.getElementById('cartSubtotal').textContent = `$${subtotal.toLocaleString('es-AR')}`;
+            document.getElementById('cartTotal').textContent = `$${subtotal.toLocaleString('es-AR')}`;
+        }
+
+        // Toggle Cart Drawer
+        function toggleCart() {
+            const overlay = document.getElementById('cartOverlay');
+            const drawer = document.getElementById('cartDrawer');
+            
+            if (drawer.classList.contains('translate-x-full')) {
+                overlay.classList.remove('hidden');
+                setTimeout(() => overlay.classList.remove('opacity-0'), 10);
+                drawer.classList.remove('translate-x-full');
+            } else {
+                overlay.classList.add('opacity-0');
+                drawer.classList.add('translate-x-full');
+                setTimeout(() => overlay.classList.add('hidden'), 300);
+            }
+        }
+
+        // Mercado Pago Simulated Checkout
+        function checkoutMercadoPago() {
+            if (cart.length === 0) return;
+            
+            showToast("Redirigiendo...", "Conectando con pasarela de pago segura...", "text-sky-400");
+            
+            setTimeout(() => {
+                // Simulate checkout redirection link to Mercado Pago
+                const simulatedMPUrl = "https://www.mercadopago.com.ar/checkout/v1/redirect?pref_id=simulated_electrotech_checkout";
+                
+                const confirmRedirect = confirm("Serás redirigido a Mercado Pago para completar tu pago de forma segura. ¿Deseas continuar?");
+                if(confirmRedirect || true) {
+                    window.open(simulatedMPUrl, '_blank');
+                    clearCart();
+                    toggleCart();
+                    showToast("¡Pedido Creado!", "Simulación de pago exitosa. ¡Gracias por tu compra!", "text-emerald-400");
+                }
+            }, 1000);
+        }
+
+        // Toast Notification Helper
+        function showToast(title, message, iconColorClass = "text-emerald-400") {
+            const toast = document.getElementById('toast');
+            const toastTitle = document.getElementById('toastTitle');
+            const toastMessage = document.getElementById('toastMessage');
+            const toastIcon = document.getElementById('toastIcon');
+
+            toastTitle.textContent = title;
+            toastMessage.textContent = message;
+            toastIcon.className = iconColorClass;
+
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+
+            setTimeout(() => {
+                toast.classList.remove('translate-y-0', 'opacity-100');
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3500);
+        }
+    </script>
+</body>
+</html>
+```
